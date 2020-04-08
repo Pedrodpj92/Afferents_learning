@@ -17,7 +17,7 @@ Welcome to the repository of Afferents Learning, a system based in machine learn
      * [Recursive](#recursive)
   * [Examples](#examples)
   * [Contact and authors](#contact-and-authors)
-  * [Licence](#licence)
+  * [License](#license)
 
 
 ## Installation
