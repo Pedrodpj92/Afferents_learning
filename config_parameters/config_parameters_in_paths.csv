@@ -1,0 +1,5 @@
+path_id,path_in_neurons,path_in_afferents,path_in_pos,path_in_neg
+path_experiment,./data/experimental_dataset/units.csv,./data/experimental_dataset/afferents.csv,./data/experimental_dataset/dt_pos.xlsx,./data/experimental_dataset/dt_neg.xlsx
+high,./data/sim_dataset_high/units.csv,./data/sim_dataset_high/afferents.csv,./data/sim_dataset_high/dt_pos.xlsx,./data/sim_dataset_high/dt_neg.xlsx
+medium,./data/sim_dataset_medium/units.csv,./data/sim_dataset_medium/afferents.csv,./data/sim_dataset_medium/dt_pos.xlsx,./data/sim_dataset_medium/dt_neg.xlsx
+low,./data/sim_dataset_low/units.csv,./data/sim_dataset_low/afferents.csv,./data/sim_dataset_low/dt_pos.xlsx,./data/sim_dataset_low/dt_neg.xlsx
