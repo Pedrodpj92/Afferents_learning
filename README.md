@@ -17,7 +17,7 @@ Welcome to the repository of Afferents Learning, a system based in machine learn
      * [Recursive](#recursive)
   * [Examples](#examples)
   * [Contact and authors](#contact-and-authors)
-  * [Licence](#licence)
+  * [License](#license)
 
 
 ## Installation
@@ -39,7 +39,7 @@ In this section we will explain (as briefly as we can) how the system works to e
 
 Afferents Learning is based in a Data Mining development, so we may highlight **some main steps such as Data Preparation, Modeling or Evaluation**. If you wish to explore more details deeply, we recommend [CRISP-DM](https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining) and the [step-by-step data mining guide](https://www.the-modeling-agency.com/crisp-dm.pdf).
 
-**This system uses spike neuron times as input in csv format**. We need two files, one for neurons (Ux in columns) and other for afferents (Rx in columns). We can found data used in examples in ./data folder. Similar to following screenshots. Notice "NaN" (Not a Number) values because neurons have not the same number of neurons but we use table format as input. Those files has NaN instead of "NA" (Not Available for R) because files' origin is MATLAB.
+**This system uses spike neuron times as input in csv format**. We need two files, one for neurons (Ux in columns) and other for afferents (Rx in columns). We can found data used in examples in ./data folder. Similar to following screenshots. Notice "NaN" (Not a Number) values because neurons have not the same number of spike times but we use table format as input. Those files has NaN instead of "NA" (Not Available for R) because files' origin is MATLAB.
 ![units_screenshot](/readme_images/units_example_screenshot.PNG)
 ![afferents_screenshot](/readme_images/afferents_example_screenshot.PNG)
 
@@ -58,7 +58,7 @@ As we told for preprocess module, there are other tasks and implementation detai
 ## Tutorial
 The system has several **parameters** that an be setted such as where **input files** are, the **number of afferents spikes** taken into account or **what neurons should be used** by the system. The full list are found in [Configuration parameters](#configuration-parameters) section.
 
-The analysis showed in How it works section can be used in workflows, designed for different purposes. There are explained in [Workflows](#worflows) section.
+The analysis showed in [How it works](#how-it-works) section can be used in workflows, designed for different purposes. There are explained in [Workflows](#workflows) section.
 
 We present two ways to set those parameters and the type of workflow used.
 
@@ -90,10 +90,10 @@ One of the advantages of this way of use is that we can run several configuratio
 
 
 ### Using configuration by user
-In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simplier than configuration by tables, but we can only use one configuration per run and in execution the program will ask again about parameters. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
+In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simpler than configuration by tables, but we can only use one configuration per run and in each new execution the program will ask again about parameters. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
 
   * If selection files windows are closed without select a file, RStudio may should be reset for a proper run next time.
-  * Input files should be in a folder inside project directory, such as configuration_parameters_in_path previous explanation. Input files placed out of the directory project.
+  * Input files should be in a folder inside project directory, as configuration_parameters_in_path previous explanation. Input files placed out of the directory project.
   * Check that the working directory is the same as the project directory, as explained in the other way of using.
   * Using this way, every neuron of a dataset will be used.
   * If you find any error, doubt, or you have any suggestion, please, write us. This will help to improve the system.
@@ -174,4 +174,5 @@ Results are saved in ./output directory. Explore each main program in order to s
 
 ## License
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 [GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
