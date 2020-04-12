@@ -50,8 +50,8 @@ dir.create("./output/80M/high",recursive = TRUE)
 high_80M <- workflow_commander(config_data_id = "80M_high",
                              vec_random_seed = c(1:30)+100,
                              wf_calls = c("iterative","recursive"))
-high_80M_iterative <- low_80M$iterative
-high_80M_recursive <- low_80M$recursive
+high_80M_iterative <- high_80M$iterative
+high_80M_recursive <- high_80M$recursive
 
 write.csv(x = high_80M_iterative,
           file = paste0("./output/80M/high/dt_iterative.csv"),
