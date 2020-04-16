@@ -5,16 +5,17 @@ Welcome to the repository of Afferents Learning, a system based in machine learn
 ## Table of contents
   * [Installation](#installation)
   * [How it works](#how-it-works)
+	* [Summary](#summary)
+    * [Workflows](#workflows)
+	 * [RandomSeeds](#randomseeds)
+	 * [Individual](#individual)
+	 * [Combinatory](#combinatory)
+	 * [Iterative](#iterative)
+	 * [Recursive](#recursive)
   * [Tutorial](#tutorial)
-     * [Using configuration by tables](#using-configuration-by-tables)
-     * [Using configuration by user](#using-configuration-by-user)
+	 * [Using configuration by questionnaire](#using-configuration-by-questionnaire)
+     * [Using configuration by sheets](#using-configuration-by-sheets)
   * [Configuration parameters](#configuration-parameters)
-  * [Workflows](#workflows)
-     * [RandomSeeds](#randomseeds)
-     * [Individual](#individual)
-     * [Combinatory](#combinatory)
-     * [Iterative](#iterative)
-     * [Recursive](#recursive)
   * [Examples](#examples)
   * [Contact and authors](#contact-and-authors)
   * [License](#license)
@@ -35,40 +36,73 @@ Then, run packages_installer.R, this should install dependencies.
 
 
 ## How it works
-In this section we will explain (as briefly as we can) how the system works to execute an analysis and then, in Tutorial section, how the user can use it following two different ways.
+In this section we will explain (as briefly as we can) some biological concepts in order to clarify the aim of this development. Then, how the system works to execute an analysis and after that, in Tutorial section, how the user can use it following two different ways.
 
 Afferents Learning is based in a Data Mining development, so we may highlight **some main steps such as Data Preparation, Modeling or Evaluation**. If you wish to explore more details deeply, we recommend [CRISP-DM](https://en.wikipedia.org/wiki/Cross-industry_standard_process_for_data_mining) and the [step-by-step data mining guide](https://www.the-modeling-agency.com/crisp-dm.pdf).
 
-**This system uses spike neuron times as input in csv format**. We need two files, one for neurons (Ux in columns) and other for afferents (Rx in columns). We can found data used in examples in ./data folder. Similar to following screenshots. Notice "NaN" (Not a Number) values because neurons have not the same number of spike times but we use table format as input. Those files has NaN instead of "NA" (Not Available for R) because files' origin is MATLAB.
+### About Biological concepts
+Under construction...
+
+### Summary
+**This system uses spike neuron times (in seconds) as input in csv format**. We need two files, one for neurons (Ux in columns) and other for afferents (Rx in columns). We can found data used in examples in ./data folder. Similar to following screenshots. Notice "NaN" (Not a Number) values because neurons have not the same number of spike times but we use table format as input. Those files has NaN instead of "NA" (Not Available for R) because files' origin is MATLAB. Cells of the same row needn't be related. Each column stores every spike time of its neuron/afferent.
 ![units_screenshot](/readme_images/units_example_screenshot.PNG)
 ![afferents_screenshot](/readme_images/afferents_example_screenshot.PNG)
 
-**Data Preparation** is carried by preprocess module. We transform data as you see in last paragraph to something similar to this hypothetical example:
+**Data Preparation** is carried by preprocess module. First we calculate time correlations and store it in Excel format as intermediate data. Then, we transform data to something similar to this hypothetical example:
 ![preprocess_example](/readme_images/preprocess_example.PNG)
 
-Details about this module will be revealed in following updates in its own readme. By now, we only need to know that the right column (R1) is the afferent (class) and it indicates if there is afferent spike or not in an interval of time, the left column (t) is an identifier and the remaining columns (Ux) are neurons (features or variables) and they keep categorical data which meaning is the time among neuron spike and a trigger (the ocurrence or not of afferent spike).
+Details about this module will be revealed in following updates in its own readme. By now, we only need to know that the right column (R) is the afferent (class or target) and it indicates if there is afferent spike or not in an interval of time, the left column (t) is an identifier and the remaining columns (Ux) are neurons (features or variables) and they keep categorical data which meaning is the time among neuron spike and a trigger (the ocurrence or not of afferent spike).
 
-In the module called model used for **Modeling**, C5.0 trains a model using preprocessed data. We chose this algorithm because it belongs to decision tree family and we prioritize that models can explain why take a decision. It also supports tasks about the selection of most relevant neurons in the dataset.
+In the module called model, used for **Modeling**, C5.0 trains a model using preprocessed data. We chose this algorithm because it belongs to decision tree family and we prioritize that models can explain why take a decision. It also supports tasks about the selection of most relevant neurons in the dataset.
 
 In evaluate module for **Evaluation**, we use metrics in order to check the quality of the trained model and the data used. Mainly, we focus on MCC (Matthews Correlation Coefficient), precision and recall.
 
 As we told for preprocess module, there are other tasks and implementation details which will be explained in each appropiate readme in following updates.
 
+The analysis can be used in workflows, designed for different purposes. They are explained in following section.
+
+### Workflows
+In order to improve and validate results beyond the direct application of C5.0, we design several protocols or workflows where the system adopts different procedures. More details than explained bellow will be extended in workflow readme for next updates.
+
+#### RandomSeeds
+The most similar behaviour as the direct application of the algorithm. This workflow can use a vector of integers in order to use it as random seeds. It will run the analysis as many times as the length of the vector. Then, the system calculates the mean, the standard deviation (SD) and the standard error of the mean (SEM) for each metric.
+
+#### Individual
+In this process, the system will train as many models as neurons are used in the configuration. The output is a table with metrics per neuron, so we can achieve a ratio about how related is each neuron with the afferent. In file metrics_per_neuron.csv placed in ./config_parameters folder are saved results for support iterative workflow, explained later.
+
+#### Combinatory
+This is the most heavy process. It is nor recommended if you are in a hurry because the time invested can be involve from minutes to hours or even days. This workflow train as many models as combinations of neurons are in the dataset configuration. For 13 neurons, for example, 8192 analysis must be carried. Thus, this workflow is not recommended for large number of neurons. The goal is to achieve what are the best neurons involved in the afferent behaviour.
+
+#### Iterative
+Because combinatory process can waste computational resources and even cannot finish in a comprehensive period of time, we present a couple of alternatives. The first one, iterative workflow, is supported by the idea of neurons with the best individual metrics will achieve the best metrics as a group. So individual analysis must be carried for a configuration before execute this type of workflow. There will be as many analysis as the number of neurons with individual MCC greater than 0. Starting with every neuron with this condition (MCC>0), the workflow removes the worst neuron pointed by the lowest individual MCC in each iteration or step.
+
+#### Recursive
+An alternative to iterative workflow. This process relies its strength in how C5.0 uses neurons in generated tree or models. Starting with the whole set of neurons, a first execution defines two groups of neurons under C5.0 criteria. The first group contains those neurons that the model uses to build rules and decisions. The second group conteins neurons not used by the model. If the model uses every single neuron in the current analysis, then, the process is forced to place the most used neurons in first group (top half) and the remaing in the second group (bottom half). For each formed group, a new analysis is carried again. The process is repeated until an analysis arrives to a single neuron or the system is not able to fit a model.
+
+
 
 ## Tutorial
-The system has several **parameters** that an be setted such as where **input files** are, the **number of afferents spikes** taken into account or **what neurons should be used** by the system. The full list are found in [Configuration parameters](#configuration-parameters) section.
-
-The analysis showed in [How it works](#how-it-works) section can be used in workflows, designed for different purposes. There are explained in [Workflows](#workflows) section.
+The system has several **parameters** that can be setted such as where **input files** are, the **number of afferents spikes** taken into account or **what neurons should be used** by the system. The full list can be found in [Configuration parameters](#configuration-parameters) section.
 
 We present two ways to set those parameters and the type of workflow used.
 
-### Using configuration by tables
+
+### Using configuration by questionnaire
+In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simpler than configuration by tables, but we can only use one configuration per run and in each new execution the program will ask again about parameters. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
+
+  * If selection files windows are closed without select a file, RStudio may should be reset for a proper run next time.
+  * Input files should be in a folder inside project directory, as configuration_parameters_in_path previous explanation. Input files placed out of the directory project.
+  * Check that the working directory is the same as the project directory, as explained in the other way of using.
+  * Using this way, every neuron of a dataset will be used.
+  * If you find any error, doubt, or you have any suggestion, please, write us. This will help to improve the system.
+
+### Using configuration by sheets
 In ./config_parameters folder can be found 3 files in csv format:
   * config_parameters_general.csv
   * config_parameters_in_paths.csv
   * config_parameters_neurons.csv
 
-They work as a 3 related tables. We considered the use of a data base, in future versions can be updated, but editting csv files are faster and not require that the user knows how operate with a data base.
+They work as a 3 _related tables_. We considered the use of a data base, in future versions can be updated, but editting csv files are faster and not require that the user knows how operate with a data base.
 
 Notice the parameter "data_id". This will be the one who identify an specific configuration. The word "default" is reserved and should not be used for this way.
 
@@ -87,16 +121,6 @@ When every parameter is setted **we need to adapt our own main script file**. **
 Be sure that the working directory is the same as the directory project. Use [getwd() and setwd()](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/getwd) for this task.
 
 One of the advantages of this way of use is that we can run several configurations at once and we only need to run the main script with one click when parameters are setted. However, it may be complex at first and may spend time until we familiarize ourselves with the process. For this reason we present also the configuration by user.
-
-
-### Using configuration by user
-In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simpler than configuration by tables, but we can only use one configuration per run and in each new execution the program will ask again about parameters. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
-
-  * If selection files windows are closed without select a file, RStudio may should be reset for a proper run next time.
-  * Input files should be in a folder inside project directory, as configuration_parameters_in_path previous explanation. Input files placed out of the directory project.
-  * Check that the working directory is the same as the project directory, as explained in the other way of using.
-  * Using this way, every neuron of a dataset will be used.
-  * If you find any error, doubt, or you have any suggestion, please, write us. This will help to improve the system.
 
 
 ## Configuration parameters
@@ -131,23 +155,6 @@ Any input folder should be exists before run the system.
   * _isComb_: Logical value (TRUE/FALSE), points if a neuron is used or not in combinatory workflow for its related configuration.
 
 
-## Workflows
-In order to improve and validate results beyond the direct application of C5.0, we design several protocols or workflows where the system adopts different procedures. More details than explained bellow will be extended in workflow readme for next updates.
-
-### RandomSeeds
-The most similar behaviour as the direct application of the algorithm. This workflow can use a vector of integers in order to use it as random seeds. It will run the analysis as many times as the length of the vector. Then, the system calculates the mean, the standard deviation (SD) and the standard error of the mean (SEM) for each metric.
-
-### Individual
-In this process, the system will train as many models as neurons are used in the configuration. The output is a table with metrics per neuron, so we can achieve a ratio about how related is each neuron with the afferent. In file metrics_per_neuron.csv placed in ./config_parameters folder are saved results for support iterative workflow, explained later.
-
-### Combinatory
-This is the most heavy process. It is nor recommended if you are in a hurry because the time invested can be involve from minutes to hours or even days. This workflow train as many models as combinations of neurons are in the dataset configuration. For 13 neurons, for example, 8192 analysis must be carried. Thus, this workflow is not recommended for large number of neurons. The goal is to achieve what are the best neurons involved in the afferent behaviour.
-
-### Iterative
-Because combinatory process can waste computational resources and even cannot finish in a comprehensive period of time, we present a couple of alternatives. The first one, iterative workflow, is supported by the idea of neurons with the best individual metrics will achieve the best metrics as a group. So individual analysis must be carried for a configuration before execute this type of workflow. There will be as many analysis as the number of neurons with individual MCC greater than 0. Starting with every neuron with this condition (MCC>0), the workflow removes the worst neuron pointed by the lowest individual MCC in each iteration or step.
-
-### Recursive
-An alternative to iterative workflow. This process relies its strength in how C5.0 uses neurons in generated tree or models. Starting with the whole set of neurons, a first execution defines two groups of neurons under C5.0 criteria. The first group contains those neurons that the model uses to build rules and decisions. The second group conteins neurons not used by the model. If the model uses every single neuron in the current analysis, then, the process is forced to place the most used neurons in first group (top half) and the remaing in the second group (bottom half). For each formed group, a new analysis is carried again. The process is repeated until an analysis arrives to a single neuron or the system is not able to fit a model.
 
 ## Examples
 In the proyect folder (./) we find main scripts which constitute 
