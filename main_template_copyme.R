@@ -39,13 +39,13 @@
 #check with getwd() and change with setwd()
 source("./workflow/workflow_commander.R")
 
-#this will save a log file, if you prefer, you can disable comment the line
-#remember also comment/uncomment the sink() function at the end of this code
+#this will save a log file, if you don't want to save it, comment the following line and
+#the last line with the sink() function at the end of this code
 # sink("./log_dd-mm-yyyy.txt", append=FALSE, split=TRUE)
-# sink() #switch off the log and write on output console as always at the end, see the bottom of this file
+# sink() #if the program did a execution with errors, call this function in order to close the log file
 sink(paste0("./log_main_template_changeMyName_",gsub(":","-",gsub(" ", "_",Sys.time())),".txt"), append=FALSE, split=TRUE)
 
-#change where you wish that your data should be saved
+#change where you want your data be saved
 dir.create("./output/yourOutputDirectory",recursive = TRUE)
 
 ##this is the handler who calls each workflow
@@ -55,12 +55,12 @@ dir.create("./output/yourOutputDirectory",recursive = TRUE)
 # - vec_random_seed: vector of integers that will be used for set seed.
 #                     In this example, there are 30, but you can use the vector that you wish
 #                     even, just one number, 123 for example
-# - wf_calls: what workflows should be done.
+# - wf_calls: workflows that should be done.
 #             Options are: randomSeeds, individual, combinatory, recursive, iterative
 #             In this template you start without combinatory because it spend a lot of time,
 #             but you can add it if you want to perform a combinatory workflow
 #             feel free for adapt for your case.
-dt_results <- workflow_commander(config_data_id = "id_change_me_I_do_not_appear_in_config_tables",
+dt_results <- workflow_commander(config_data_id = "id_template_changeMe", #change the name with the proper data_id that you used
                              vec_random_seed = c(1:30)+100,
                              wf_calls = c("randomSeeds","individual",
                                           "recursive","iterative"))

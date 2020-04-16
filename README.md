@@ -70,7 +70,7 @@ In this process, the system will train as many models as neurons are used in the
 This is the most heavy process. It is nor recommended if you are in a hurry because the time invested can be involve from minutes to hours or even days. This workflow train as many models as combinations of neurons are in the dataset configuration. For 13 neurons, for example, 8192 analysis must be carried. Thus, this workflow is not recommended for large number of neurons. The goal is to achieve what are the best neurons involved in the afferent behaviour.
 
 #### Iterative
-Because combinatory process can waste computational resources and even cannot finish in a comprehensive period of time, we present a couple of alternatives. The first one, iterative workflow, is supported by the idea of neurons with the best individual metrics will achieve the best metrics as a group. So individual analysis must be carried for a configuration before execute this type of workflow. There will be as many analysis as the number of neurons with individual MCC greater than 0. Starting with every neuron with this condition (MCC>0), the workflow removes the worst neuron pointed by the lowest individual MCC in each iteration or step.
+Because combinatory process can waste computational resources and even can not finish in a comprehensive period of time, we present a couple of alternatives. The first one, iterative workflow, is supported by the idea of neurons with the best individual metrics will achieve the best metrics as a group. So individual analysis must be carried for a configuration before execute this type of workflow. There will be as many analysis as the number of neurons with individual MCC greater than 0. Starting with every neuron with this condition (MCC>0), the workflow removes the worst neuron pointed by the lowest individual MCC in each iteration or step.
 
 #### Recursive
 An alternative to iterative workflow. This process relies its strength in how C5.0 uses neurons in generated tree or models. Starting with the whole set of neurons, a first execution defines two groups of neurons under C5.0 criteria. The first group contains those neurons that the model uses to build rules and decisions. The second group conteins neurons not used by the model. If the model uses every single neuron in the current analysis, then, the process is forced to place the most used neurons in first group (top half) and the remaing in the second group (bottom half). For each formed group, a new analysis is carried again. The process is repeated until an analysis arrives to a single neuron or the system is not able to fit a model.
@@ -78,45 +78,45 @@ An alternative to iterative workflow. This process relies its strength in how C5
 
 
 ## Tutorial
-The system has several **parameters** that can be setted such as where **input files** are, the **number of afferents spikes** taken into account or **what neurons should be used** by the system. The full list can be found in [Configuration parameters](#configuration-parameters) section.
-
+The system has several **parameters** that can be setted such as where **input files** are, the **number of afferents spikes** taken into account or **what neurons should be used** by the system. The full list can be found in [Configuration parameters](#configuration-parameters) section. We define _specific configuration_ as the set of values for each parameter in order to run properly the system.
 We present two ways to set those parameters and the type of workflow used.
 
 
 ### Using configuration by questionnaire
-In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simpler than configuration by tables, but we can only use one configuration per run and in each new execution the program will ask again about parameters. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
-
-  * If selection files windows are closed without select a file, RStudio may should be reset for a proper run next time.
+In this way, we only need to execute **_main_default.R_** file. Then, **a process will start and the command line will ask to the user about parameters**. It is simpler than configuration by sheets, but we can only use one configuration per run and in each new execution the program will ask again about parameters and workflows. As the process is leaded by its own execution, not more explanations are needed here, but a few considerations must be done:
+  * If selection files windows are closed without selecting a file, RStudio may should be reset for a proper run next time.
   * Input files should be in a folder inside project directory, as configuration_parameters_in_path previous explanation. Input files placed out of the directory project.
   * Check that the working directory is the same as the project directory, as explained in the other way of using.
   * Using this way, every neuron of a dataset will be used.
   * If you find any error, doubt, or you have any suggestion, please, write us. This will help to improve the system.
-
+  * Persistent intermediate data with correlations, as well as results, are stored in ./output folder. Remember to move firstly those intermediate files if you run again main_default.R and chose different input files. If you run again main_default.R but with the same input files, the system can reuse intermediate files in order to save some time.
+  * We found problems in some PC with Windows using RStudio about permisions when directories are created. Run RStudio as administrator or grant permisions properly.
+  
 ### Using configuration by sheets
+One of the advantages of this way of use is that we can run several configurations at once and we only need to run a main script with one click when parameters are setted. However, it may be complex at first and may spend time until we familiarize ourselves with the process. For this reason we presented the previous configuration by questionnaire.
+
 In ./config_parameters folder can be found 3 files in csv format:
   * config_parameters_general.csv
   * config_parameters_in_paths.csv
   * config_parameters_neurons.csv
 
-They work as a 3 _related tables_. We considered the use of a data base, in future versions can be updated, but editting csv files are faster and not require that the user knows how operate with a data base.
+We have to fill those tables in order to set an specific configuration. They work as a 3 _related tables_. We considered the use of a data base, in future versions can be updated, but editting csv files are faster and not require that the user knows how operate with a data base.
 
 Notice the parameter "data_id". This will be the one who identify an specific configuration. The word "default" is reserved and should not be used for this way.
 
 Currently tables are filled with parameters used in examples. Every field is required excepts "description" and "notes".
 
-**General** configuration should have only one row per specific configuration, so elements en data_id column must not be repeated.
+**config_parameters_general.csv**: Some general parameters such as the amount of neurons used or the index of the afferent target in input files. In this file we should have only one row per specific configuration, so elements in data_id column must not be repeated.
 
-**In_paths** stores variables about input and intermediate data. Notice that paths are relative from the project folder. The system are not tested using complete paths so we can not ensure a proper working. Be sure that "path_id" column does not contains repeated elements.
+**config_parameters_in_paths.csv**: Stores variables about input and intermediate data locations. Notice that paths are relative from the project folder. The system are not tested using complete paths so we can not ensure a proper working. Be sure that "path_id" column does not contains repeated elements inside this field.
 
-**Neurons** has information about neurons used in each configuration. In this case, "data_id" elements can be repeated as many times as the number of used neurons has a configuration. "experimental_dataset" for example uses 13 neurons, so 13 occurrences with this identifier should appear in this file.
+**config_parameters_neurons.csv**: This file has information about neurons used. In this case, "data_id" elements can be repeated as many times as the number of used neurons for its specific configuration. "experimental_dataset" for example uses 13 neurons, so 13 occurrences with this identifier should appear in this file.
 
-We recommend explore [Examples](#examples) section in order to understand better several cases of filling those parameters.
+We recommend explore [Examples](#examples) section in order to understand better several cases of how to fill those parameters.
 
 When every parameter is setted **we need to adapt our own main script file**. **Copy** the file **_main_template_copyme.R_** and adapt with your configuration. Inside the file you will find comments about how manage this code.
 
 Be sure that the working directory is the same as the directory project. Use [getwd() and setwd()](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/getwd) for this task.
-
-One of the advantages of this way of use is that we can run several configurations at once and we only need to run the main script with one click when parameters are setted. However, it may be complex at first and may spend time until we familiarize ourselves with the process. For this reason we present also the configuration by user.
 
 
 ## Configuration parameters
@@ -125,19 +125,19 @@ We group those parameters depending on the configuration file where we can find 
 
 #### config_parameters_general.csv
   * _data_id_: Identifier of an specific configuration. It must be **unique** in this file. The word "default" is reserved and should not be used.
-  * _path_id_: This variable works as a [foregin key](https://en.wikipedia.org/wiki/Foreign_key) to relate information about input data. This variable can has repeated values in this general table. Information about input data is store in config_parameters_in_paths.csv.
+  * _path_id_: This variable works as a [foregin key](https://en.wikipedia.org/wiki/Foreign_key) to relate information about input data, which information is stored in config_parameters_in_paths.csv. This variable can has repeated values in this general table.
   * _index_in_afferent_: Points the column selected in afferents input file (See config_parameters_in_paths.csv).
   * _aff_className_: The label assigned to the column class, just ornamental.
   * _aff_spNumber_: The number of spikes produced by analyzed afferent.
   * _n_trials_: The number of trials for boosting used for train a C5.0 model ( [see C5.0 documentation](https://cran.r-project.org/web/packages/C50/C50.pdf) ).
   * _isSubset_: This parameters points if the configuration uses the whole set of neurons or part of it. For example, if our neurons input file has 80 neurons, but we only wish to use 13 of them. Values are TRUE or FALSE.
   * _n_neurons_used_: The number of neurons involved in the configuration.
-  * _n_neurons_total_: The total amount of neurons in the input neuron file. This number should be the same as n_nuerons_used if isSubset if FALSE.
+  * _n_neurons_total_: The total amount of neurons in the input neuron file. This number should be the same as _n_nuerons_used_ if _isSubset_ if FALSE.
   * _description_: Not readed by the system, just for help to the user about details for each configuration. **If it is not empty in a row, should be surrounded by quotes (" ")**
   * _notes_: Not readed by the system, just for help to the user about the execution or any question that must be taken into account. As description, must be surrounded by quotes. 
 
 #### config_parameters_in_paths.csv
-Any input folder should be exists before run the system.
+Any input folder should exist before we run the system.
   * _path_id_: Identifier of input files. Each occurrence must be unique in this file. In general configuration there is a variable which works as foreign key and points to the rows matched in this file.
   * _path_in_neurons_: Relative path to neurons file in csv format.
   * _path_in_afferents_: Relative path to afferents file in csv format.
@@ -147,7 +147,7 @@ Any input folder should be exists before run the system.
 #### config_parameters_neurons.csv
   * _data_id_: This parameters relate each neuron with its configuration, so the content of each cell should exist in general file. For this case, elements of this parameter do not need to be unique because the most common situation is that a configuration contains more than one neuron.
   * _neurons_name_pos_: Label or name asiggned for a neuron. It is highly recommend that each name matchs with the name of related column in input files.
-  * _neurons_involved_pos_: Index of each neuron in each sheet for path_in_pos Excel file.
+  * _neurons_involved_pos_: Index of each neuron in each sheet for _path_in_pos_ Excel file.
   * _isComb_: Logical value (TRUE/FALSE), points if a neuron is used or not in combinatory workflow for its related configuration.
 
 
