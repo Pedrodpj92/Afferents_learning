@@ -5,7 +5,7 @@ Welcome to the repository of Afferents Learning, a system based in machine learn
 ## Table of contents
   * [Installation](#installation)
   * [How it works](#how-it-works)
-    * [About Biological concepts](about-biological-concepts)
+    * [About Biological concepts](#about-biological-concepts)
     * [Summary](#summary)
     * [Workflows](#workflows)
   * [Tutorial](#tutorial)
