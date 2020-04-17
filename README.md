@@ -1,7 +1,9 @@
 # Afferents Learning
 
 Welcome to the repository of Afferents Learning, a system based in machine learning which predicts functional connectivity within neural circuits with unknown connections by analyzing spike trains. Currently, the core uses [C5.0](https://github.com/topepo/C5.0) package and the entire system is written in R.
+
 This software has been developed in the context of the work “Discovering effective connectivity in neural circuits: analysis based on machine learning methodology”, which is not published yet. Proper reference will be provided by the time the paper is finally published.
+
 ## Table of contents
   * [Installation](#installation)
   * [How it works](#how-it-works)
@@ -38,9 +40,13 @@ Afferents Learning is based in a Data Mining development, so we may highlight **
 
 ### About Biological concepts
 Our current research is focused in the neural circuits located in the dorsal horn of the spinal cord controlling the phenomenon known as primary afferent depolarization and dorsal root reflexes. 
+
 Primary afferents constitute the first element in the nociceptive system. In normal conditions, these neurons are activated when a noxious stimulus reaches the body and they conduct this information from the periphery to the dorsal horn of the spinal cord, so they act as the input element of the circuit. 
+
 However, the primary afferents can be activated centrally by local spinal cord neurons, triggering an antidromic flux of information which can elicit certain physio-pathological processes in peripheral tissue such as neurogenic inflammation or allodynia. In this context, primary afferents act as the output element of the circuit, and this is the context in which we are studying them.
+
 We want to identify the spinal neurons responsible for eliciting the primary afferent backfiring, relying on spike trains recorded from spinal cord neurons and primary afferents in electrophysiological experiments.
+
 However, we consider that this concept can be generalized and the software may be useful to evaluate functional connectivity in any other neural circuit.  
 
 ### Summary
