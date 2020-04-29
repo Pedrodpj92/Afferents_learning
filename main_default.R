@@ -76,7 +76,7 @@ if(tolower(add_iterative)=="y"){
   add_iterative <- TRUE
   wf_calls_required <- c(wf_calls_required,"iterative")
 } else {
-  add_randomSeeds <- FALSE
+  add_iterative <- FALSE
 }
 if(tolower(add_recursive)=="y"){
   add_recursive <- TRUE
